@@ -56,51 +56,65 @@ var toShort = function(universal_date_string) {
 }
 
 var api = {
-    getRqInstances: function(cb) {
-        $.getJSON(url_for('rq-instances'), function(data) {
-            var instances = data.rq_instances;
-            cb(instances);
-        }).fail(function(err){
-            cb(null, err || true);
-        });
+    getRqInstances: function (cb) {
+       fetch(url_for("rq-instances"))
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => cb(data.rq_instances))
+        .catch((err) => cb(null, err || true));
     },
 
-    getQueues: function(cb) {
-        $.getJSON(url_for('queues'), function(data) {
-            var queues = data.queues;
-            cb(queues);
-        }).fail(function(err){
-            cb(null, err || true);
-        });
+    getQueues: function (cb) {
+      fetch(url_for("queues"))
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => cb(data.queues))
+        .catch((err) => cb(null, err || true));
     },
 
-    getJobs: function(queue_name, registry_name, per_page, order, page, cb) {
-        $.getJSON(url_for_jobs_data(queue_name, registry_name, per_page, order, page), function(data) {
-            var jobs = data.jobs;
-            var pagination = data.pagination;
-            cb(jobs, pagination);
-        }).fail(function(err){
-            cb(null, null, err || true);
-        });
+    getJobs: function (queue_name, registry_name, per_page, order, page, cb) {
+      fetch(url_for_jobs_data(queue_name, registry_name, per_page, order, page))
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => cb(data.jobs, data.pagination))
+        .catch((err) => cb(null, null, err || true));
     },
 
-    getJob: function(job_id, cb) {
-        $.getJSON(url_for_single_job_data(job_id), function(data) {
-            var job = data;
-            cb(job);
-        }).fail(function(err){
-            cb(null, err || true);
-        });
+    getJob: function (job_id, cb) {
+      fetch(url_for_single_job_data(job_id))
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => cb(data))
+        .catch((err) => cb(null, err || true));
     },
 
-    getWorkers: function(cb) {
-        $.getJSON(url_for('workers'), function(data) {
-            var workers = data.workers;
-            cb(workers);
-        }).fail(function(err){
-            cb(null, err || true);
-        });
-    }
+    getWorkers: function (cb) {
+      fetch(url_for("workers"))
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => cb(data.workers))
+        .catch((err) => cb(null, err || true));
+    },
 };
 
 //
